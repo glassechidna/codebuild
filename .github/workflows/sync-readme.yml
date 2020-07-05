@@ -8,6 +8,9 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+        
       - name: Sync README
         uses: meeDamian/sync-readme@v1.0.6
         with:
