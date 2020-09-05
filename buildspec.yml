@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - |
+        set -eux
+        if mount | grep -q "xvda1"; then
+          mkdir /host && mount /dev/xvda1 /host
+        else
+          mkdir /host && mount /dev/nvme0n1p1 /host
+        fi
+        
+      - pkill dockerd && rm /var/run/docker.pid
+      - mv /var/lib/docker/image/overlay2 /var/lib/docker/image/overlay2.old
+      - mkdir /var/lib/docker/image/overlay2 && mount --bind /host/var/lib/docker/image/devicemapper /var/lib/docker/image/overlay2
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2 &
+      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - docker images
+      - docker tag 288275683263.dkr.ecr.us-west-2.amazonaws.com/standard:4.0-1.0.201066.0 ghcr.io/glassechidna/codebuild/standard:4.0-1.0.201066.0
+      - echo $GHCRIO_TOKEN | docker login ghcr.io --username $GHCRIO_USER --password-stdin
+      - docker push ghcr.io/glassechidna/codebuild/standard:4.0-1.0.201066.0
