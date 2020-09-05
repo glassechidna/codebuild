@@ -11,9 +11,9 @@ phases:
           mkdir /host && mount /dev/nvme0n1p1 /host
         fi
         
-      - kill $(cat /var/run/docker.pid)
+      - pkill dockerd && rm /var/run/docker.pid
       - mv /var/lib/docker/image/overlay2 /var/lib/docker/image/overlay2.old
       - mkdir /var/lib/docker/image/overlay2 && mount --bind /host/var/lib/docker/image/devicemapper /var/lib/docker/image/overlay2
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2
-      - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+      - sleep 15
       - docker images
