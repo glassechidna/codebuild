@@ -4,7 +4,7 @@ phases:
   build:
     commands:
       - mkdir /host && mount /dev/nvme0n1p1 /host
-      - killall dockerd
+      - pkill dockerd
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2 --data-root=/host/var/lib/docker
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
       - docker images
