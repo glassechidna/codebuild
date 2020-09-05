@@ -5,7 +5,7 @@ phases:
     commands:
       - |
         set -eux
-        if [[ $(mount) =~ (xvda1) ]]; then
+        if mount | grep -q "xvda1"; then
           mkdir /host && mount /dev/xvda1 /host
         else
           mkdir /host && mount /dev/nvme0n1p1 /host
