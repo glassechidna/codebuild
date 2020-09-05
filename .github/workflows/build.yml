@@ -19,8 +19,5 @@ jobs:
           
       - name: Run CodeBuild
         uses: aws-actions/aws-codebuild-run-build@v1.0.3
-        env:
-          GHCRIO_TOKEN: ${{ secrets.GHCRIO_TOKEN }}
-          GHCRIO_USER: ${{ secrets.GHCRIO_USER }}
         with:
           project-name: codebuild-image-uploader
