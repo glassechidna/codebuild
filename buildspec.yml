@@ -3,6 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
+      - mount
       - mkdir /host && mount /dev/nvme0n1p1 /host
       - pkill dockerd && rm /var/run/docker.pid
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2 --data-root=/host/var/lib/docker
