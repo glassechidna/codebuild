@@ -14,6 +14,6 @@ phases:
       - pkill dockerd && rm /var/run/docker.pid
       - mv /var/lib/docker/image/overlay2 /var/lib/docker/image/overlay2.old
       - mkdir /var/lib/docker/image/overlay2 && mount --bind /host/var/lib/docker/image/devicemapper /var/lib/docker/image/overlay2
-      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2
+      - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2 &
       - sleep 15
       - docker images
