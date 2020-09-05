@@ -3,8 +3,14 @@ version: 0.2
 phases:
   build:
     commands:
-      - mount
-      - mkdir /host && mount /dev/nvme0n1p1 /host
+      - |
+        set -eux
+        if [[ $(mount) =~ (xvda1) ]]; then
+          mkdir /host && mount /dev/xvda1 /host
+        else
+          mkdir /host && mount /dev/nvme0n1p1 /host
+        fi
+        
       - pkill dockerd && rm /var/run/docker.pid
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --storage-driver=overlay2 --data-root=/host/var/lib/docker
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
